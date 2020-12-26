@@ -1,5 +1,7 @@
 package com.example.newsapp;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -17,8 +20,10 @@ import java.util.List;
 public class RecyclerAdapter extends
         RecyclerView.Adapter<RecyclerView.ViewHolder> {
     List<News> dataList;
-    public RecyclerAdapter(List<News> articleArrayList) {
-        dataList = articleArrayList;
+    Context context;
+    public RecyclerAdapter(Context context, List<News> articleArrayList) {
+        this.context = context;
+        this.dataList = articleArrayList;
     }
     @NonNull
     @Override
@@ -36,6 +41,14 @@ public class RecyclerAdapter extends
                 vijestiViewHolder.tvTitle.setText(((News) dataList.get(position)).getTitle());
                 vijestiViewHolder.tvContent.setText(((News) dataList.get(position)).getDescription());
                 Picasso.get().load(String.valueOf(dataList.get(position).getUrlToImage())).resize(100, 100).centerCrop().into(vijestiViewHolder.image);
+                final String url = dataList.get(position).getUrl();
+                vijestiViewHolder.card.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent  = new Intent(context , ViewActivity.class);
+                        intent.putExtra("url", url);
+                        context.startActivity(intent); }
+                });
             }
     }
     @Override
@@ -50,11 +63,13 @@ public class RecyclerAdapter extends
         TextView tvTitle;
         TextView tvContent;
         ImageView image;
+        CardView card;
         public VijestiViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.txtTitle);
             tvContent = itemView.findViewById(R.id.txtContent);
-            image = (ImageView)itemView.findViewById(R.id.imageView);
+            image = itemView.findViewById(R.id.imageView);
+            card = itemView.findViewById(R.id.card);
         }
     }
 }

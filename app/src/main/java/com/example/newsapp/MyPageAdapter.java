@@ -14,7 +14,8 @@ public class MyPageAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int i) {
-        return new fnews(i); }
+        return new fnews(i);
+    }
 
     // Returns total number of pages
     @Override
@@ -29,7 +30,7 @@ public class MyPageAdapter extends FragmentStatePagerAdapter {
             return "VICE-News";
         else if(position == 1)
             return "newsweek";
-        else if(position ==2)
+        else if(position == 2)
             return "BBC News";
         else return "Default";
     }

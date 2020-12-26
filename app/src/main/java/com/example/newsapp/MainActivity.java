@@ -34,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-
-        // for top bar of activity
         ActionBar bar = getSupportActionBar();
         bar.setTitle("News list");
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("blue")));

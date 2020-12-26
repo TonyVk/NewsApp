@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -30,6 +31,7 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
     boolean isLoading = false;
     List<News> vijesti = new ArrayList<>();
     LinearLayoutManager mLayoutManager;
+    RecyclerAdapter mAdapter;
     int page = 1;
 
     public fnews() {
@@ -50,10 +52,10 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = view.findViewById(R.id.recyclerView);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        RecyclerAdapter mAdapter = new RecyclerAdapter(vijesti);
+        mAdapter = new RecyclerAdapter(getActivity(), vijesti);
         mRecyclerView.setAdapter(mAdapter);
         String source = "";
         if(pos == 0)
@@ -71,9 +73,8 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
         if(response.body().getStatus().equals("ok")){
             NewsResponse newsResponse = response.body();
             vijesti = newsResponse.getNews();
-            vijesti.add(null);
             if(vijesti.size()>0) {
-                RecyclerAdapter mAdapter = new RecyclerAdapter(vijesti);
+                mAdapter = new RecyclerAdapter(getActivity(), vijesti);
                 mRecyclerView.setAdapter(mAdapter);
             }
         }
@@ -93,7 +94,10 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
 
                 if (!isLoading) {
                     if (mLayoutManager != null && mLayoutManager.findLastCompletelyVisibleItemPosition() == vijesti.size() - 1) {
-                        page = page+1;
+                        isLoading = true;
+                        if(page <= 5) {
+                            page = page + 1;
+                        }
                         String source = "";
                         if(pos == 0)
                             source = "vice.com";
@@ -101,27 +105,25 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
                             source = "newsweek.com";
                         else if(pos == 2)
                             source = "bbc.co.uk";
-                        ApiManager.getInstance().service().getNews(source, page, apiKey).enqueue(new Callback<NewsResponse>() {
-                            @Override
-                            public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
-                                if(response.body().getStatus().equals("ok")){
-                                    NewsResponse newsResponse = response.body();
-                                    vijesti = newsResponse.getNews();
-                                    vijesti.add(null);
-                                    if(vijesti.size()>0) {
-                                        RecyclerAdapter mAdapter = new RecyclerAdapter(vijesti);
-                                        mRecyclerView.setAdapter(mAdapter);
+                        if(page != 6) {
+                            ApiManager.getInstance().service().getNews(source, page, apiKey).enqueue(new Callback<NewsResponse>() {
+                                @Override
+                                public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
+                                    if (response.body().getStatus().equals("ok")) {
+                                        NewsResponse newsResponse = response.body();
+                                        List<News> ar = newsResponse.getNews();
+                                        vijesti.addAll(ar);
+                                        mAdapter.notifyDataSetChanged();
                                     }
+                                    isLoading = false;
                                 }
-                                isLoading = false;
-                            }
 
-                            @Override
-                            public void onFailure(Call<NewsResponse> call, Throwable t) {
+                                @Override
+                                public void onFailure(Call<NewsResponse> call, Throwable t) {
 
-                            }
-                        });
-                        isLoading = true;
+                                }
+                            });
+                        }
                     }
                 }
             }
