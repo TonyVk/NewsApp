@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -29,6 +31,23 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tablayout);
 
         MyPageAdapter viewPagerAdapter = new MyPageAdapter(getSupportFragmentManager());
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("postavke", MODE_PRIVATE);
+        boolean vice = sharedPreferences.getBoolean("vice", true);
+        if(vice) {
+            viewPagerAdapter.addFragment(new fnews(0), "Vice News");
+        }
+        boolean nweek = sharedPreferences.getBoolean("nweek", true);
+        if(nweek) {
+            viewPagerAdapter.addFragment(new fnews(1), "News Week");
+        }
+        boolean bbc = sharedPreferences.getBoolean("bbc", true);
+        if(bbc) {
+            viewPagerAdapter.addFragment(new fnews(2), "BBC News");
+        }
+        if(viewPagerAdapter.getCount() == 0)
+        {
+            viewPagerAdapter.addFragment(new fnews(0), "Vice News");
+        }
         viewPager.setAdapter(viewPagerAdapter);
 
         tabLayout.setupWithViewPager(viewPager);

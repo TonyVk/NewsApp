@@ -10,9 +10,7 @@ public class NewsResponse {
     @SerializedName("status")
     private String status;
 
-    public String getStatus() {
-        return status;
-    }
+    public String getStatus() { return status; }
 
     public List<News> getNews() {
         return vijesti;

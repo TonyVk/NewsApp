@@ -1,5 +1,6 @@
 package com.example.newsapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,14 +9,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -46,7 +48,7 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fvijesti, container, false);
+        return inflater.inflate(R.layout.fragment_fnews, container, false);
     }
 
     @Override
@@ -66,6 +68,13 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
             source = "bbc.co.uk";
         ApiManager.getInstance().service().getNews(source, page, apiKey).enqueue(this);
         initScrollListener();
+        final FloatingActionButton button = view.findViewById(R.id.bSettings);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent myIntent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(myIntent);
+            }
+        });
     }
 
     @Override
