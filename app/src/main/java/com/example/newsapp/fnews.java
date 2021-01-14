@@ -28,7 +28,7 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
 
     private TextView naslov;
     private RecyclerView mRecyclerView;
-    int pos;
+    String pos;
     String apiKey = "4fc5eb2ae4ca425a8804fd5306df7643";
     boolean isLoading = false;
     List<News> vijesti = new ArrayList<>();
@@ -40,7 +40,7 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
 
     }
 
-    public fnews(int i) {
+    public fnews(String i) {
         this.pos = i;
     }
 
@@ -59,14 +59,7 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new RecyclerAdapter(getActivity(), vijesti);
         mRecyclerView.setAdapter(mAdapter);
-        String source = "";
-        if(pos == 0)
-            source = "vice.com";
-        else if(pos == 1)
-            source = "newsweek.com";
-        else if(pos == 2)
-            source = "bbc.co.uk";
-        ApiManager.getInstance().service().getNews(source, page, apiKey).enqueue(this);
+        ApiManager.getInstance().service().getNews(pos, page, apiKey).enqueue(this);
         initScrollListener();
         final FloatingActionButton button = view.findViewById(R.id.bSettings);
         button.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +72,7 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
 
     @Override
     public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
-        if(response.body().getStatus().equals("ok")){
+        if(response.body() != null && response.body().getStatus().equals("ok")){
             NewsResponse newsResponse = response.body();
             vijesti = newsResponse.getNews();
             if(vijesti.size()>0) {
@@ -87,6 +80,11 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
                 mRecyclerView.setAdapter(mAdapter);
             }
         }
+    }
+
+    @Override
+    public void onFailure(Call<NewsResponse> call, Throwable t) {
+        t.printStackTrace();
     }
 
     private void initScrollListener() {
@@ -107,18 +105,11 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
                         if(page <= 5) {
                             page = page + 1;
                         }
-                        String source = "";
-                        if(pos == 0)
-                            source = "vice.com";
-                        else if(pos == 1)
-                            source = "newsweek.com";
-                        else if(pos == 2)
-                            source = "bbc.co.uk";
                         if(page != 6) {
-                            ApiManager.getInstance().service().getNews(source, page, apiKey).enqueue(new Callback<NewsResponse>() {
+                            ApiManager.getInstance().service().getNews(pos, page, apiKey).enqueue(new Callback<NewsResponse>() {
                                 @Override
                                 public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
-                                    if (response.body().getStatus().equals("ok")) {
+                                    if (response.body() != null && response.body().getStatus().equals("ok")) {
                                         NewsResponse newsResponse = response.body();
                                         List<News> ar = newsResponse.getNews();
                                         vijesti.addAll(ar);
@@ -139,10 +130,5 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
         });
 
 
-    }
-
-    @Override
-    public void onFailure(Call<NewsResponse> call, Throwable t) {
-        t.printStackTrace();
     }
 }

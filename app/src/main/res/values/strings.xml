@@ -4,6 +4,4 @@
     <string name="vijest_naslov">Naslov vijesti</string>
     <string name="vijesti_content">Neki tekst</string>
     <string name="slika_vijesti">Slika vijesti</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

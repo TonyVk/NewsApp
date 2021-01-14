@@ -11,16 +11,25 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.LinearLayout;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class MainActivity extends AppCompatActivity implements Callback<SourcesResponse> {
     //API KEY: 4fc5eb2ae4ca425a8804fd5306df7643
     public static ViewPager viewPager;
     public static TabLayout tabLayout;
+    String apiKey = "4fc5eb2ae4ca425a8804fd5306df7643";
+    SharedPreferences sharedPreferences;
+    MyPageAdapter viewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,24 +39,9 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.vpPager);
         tabLayout = findViewById(R.id.tablayout);
 
-        MyPageAdapter viewPagerAdapter = new MyPageAdapter(getSupportFragmentManager());
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("postavke", MODE_PRIVATE);
-        boolean vice = sharedPreferences.getBoolean("vice", true);
-        if(vice) {
-            viewPagerAdapter.addFragment(new fnews(0), "Vice News");
-        }
-        boolean nweek = sharedPreferences.getBoolean("nweek", true);
-        if(nweek) {
-            viewPagerAdapter.addFragment(new fnews(1), "News Week");
-        }
-        boolean bbc = sharedPreferences.getBoolean("bbc", true);
-        if(bbc) {
-            viewPagerAdapter.addFragment(new fnews(2), "BBC News");
-        }
-        if(viewPagerAdapter.getCount() == 0)
-        {
-            viewPagerAdapter.addFragment(new fnews(0), "Vice News");
-        }
+        viewPagerAdapter = new MyPageAdapter(getSupportFragmentManager());
+        sharedPreferences = getApplicationContext().getSharedPreferences("postavke", MODE_PRIVATE);
+        ApiManager.getInstance().service().getSources(apiKey).enqueue(this);
         viewPager.setAdapter(viewPagerAdapter);
 
         tabLayout.setupWithViewPager(viewPager);
@@ -56,5 +50,28 @@ public class MainActivity extends AppCompatActivity {
         ActionBar bar = getSupportActionBar();
         bar.setTitle("News list");
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("blue")));
+    }
+
+    @Override
+    public void onResponse(Call<SourcesResponse> call, Response<SourcesResponse> response) {
+        if(response.body() != null && response.body().getStatus().equals("ok")){
+            SourcesResponse sourcesResponse = response.body();
+            List<Sources> portali = sourcesResponse.getSources();
+            for (int i=0; i<portali.size(); i++) {
+                if(!sharedPreferences.contains(portali.get(i).getName())){
+                    viewPagerAdapter.addFragment(new fnews(portali.get(i).getId()), portali.get(i).getName());
+                }
+                else if(sharedPreferences.getBoolean(portali.get(i).getName(), false))
+                {
+                    viewPagerAdapter.addFragment(new fnews(portali.get(i).getId()), portali.get(i).getName());
+                }
+            }
+            viewPagerAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onFailure(Call<SourcesResponse> call, Throwable t) {
+
     }
 }
