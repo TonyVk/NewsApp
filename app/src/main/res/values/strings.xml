@@ -1,7 +1,9 @@
 <resources>
-    <string name="app_name">NewsApp</string>
+    <string name="app_name">Vijesti</string>
     <string name="najnovije_vijesti">Najnovije vijesti</string>
     <string name="vijest_naslov">Naslov vijesti</string>
     <string name="vijesti_content">Neki tekst</string>
     <string name="slika_vijesti">Slika vijesti</string>
+    <string name="postavke">Postavke</string>
+    <string name="postavke_info">Izaberite portale sa kojih želite pregledavati vijesti</string>
 </resources>

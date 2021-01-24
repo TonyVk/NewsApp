@@ -42,23 +42,39 @@ public class SettingsActivity extends AppCompatActivity implements Callback<Sour
             portali = sourcesResponse.getSources();
             LinearLayout.LayoutParams paramsButton = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             final LinearLayout ll = findViewById(R.id.lLayout);
+            SwitchMaterial prvi = null;
+            boolean BaremJedan = false;
             for (int i=0; i<portali.size(); i++) {
                 SwitchMaterial cb = new SwitchMaterial(this);
                 cb.setText(portali.get(i).getName());
                 cb.setChecked(false);
                 cb.setTag(portali.get(i).getName());
                 cb.setLayoutParams(paramsButton);
+                if(i == 0){
+                    prvi = cb;
+                }
                 ll.addView(cb);
                 if(!sharedPreferences.contains(portali.get(i).getName())){
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean(portali.get(i).getName(), true);
                     editor.apply();
                     cb.setChecked(true);
+                    BaremJedan = true;
                 }
                 else
                 {
-                    cb.setChecked(sharedPreferences.getBoolean(portali.get(i).getName(), false));
+                    boolean vrijednost = sharedPreferences.getBoolean(portali.get(i).getName(), false);
+                    cb.setChecked(vrijednost);
+                    if(vrijednost){
+                        BaremJedan = true;
+                    }
                 }
+            }
+            if(!BaremJedan){
+                prvi.setChecked(true);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(portali.get(0).getName(), true);
+                editor.apply();
             }
         }
     }

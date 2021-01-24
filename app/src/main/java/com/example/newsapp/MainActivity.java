@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements Callback<SourcesR
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         ActionBar bar = getSupportActionBar();
-        bar.setTitle("News list");
+        bar.setTitle("Vijesti");
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("blue")));
     }
 
@@ -57,14 +57,20 @@ public class MainActivity extends AppCompatActivity implements Callback<SourcesR
         if(response.body() != null && response.body().getStatus().equals("ok")){
             SourcesResponse sourcesResponse = response.body();
             List<Sources> portali = sourcesResponse.getSources();
+            boolean BaremJedan = false;
             for (int i=0; i<portali.size(); i++) {
                 if(!sharedPreferences.contains(portali.get(i).getName())){
                     viewPagerAdapter.addFragment(new fnews(portali.get(i).getId()), portali.get(i).getName());
+                    BaremJedan = true;
                 }
                 else if(sharedPreferences.getBoolean(portali.get(i).getName(), false))
                 {
                     viewPagerAdapter.addFragment(new fnews(portali.get(i).getId()), portali.get(i).getName());
+                    BaremJedan = true;
                 }
+            }
+            if(!BaremJedan) {
+                viewPagerAdapter.addFragment(new fnews(portali.get(0).getId()), portali.get(0).getName());
             }
             viewPagerAdapter.notifyDataSetChanged();
         }

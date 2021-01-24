@@ -20,6 +20,7 @@ public class MyPageAdapter extends FragmentStatePagerAdapter {
         super(fm);
     }
 
+    @NonNull
     @Override
     public Fragment getItem(int i) {
         return mFragmentList.get(i);
