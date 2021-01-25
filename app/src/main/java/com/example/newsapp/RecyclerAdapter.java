@@ -40,7 +40,7 @@ public class RecyclerAdapter extends
             if(dataList.get(position) != null) {
                 vijestiViewHolder.tvTitle.setText(((News) dataList.get(position)).getTitle());
                 vijestiViewHolder.tvContent.setText(((News) dataList.get(position)).getDescription());
-                Picasso.get().load(String.valueOf(dataList.get(position).getUrlToImage())).resize(100, 100).centerCrop().into(vijestiViewHolder.image);
+                Picasso.get().load(String.valueOf(dataList.get(position).getUrlToImage())).resize(100, 100).centerCrop().error(R.drawable.notfound).into(vijestiViewHolder.image);
                 final String url = dataList.get(position).getUrl();
                 vijestiViewHolder.card.setOnClickListener(new View.OnClickListener() {
                     @Override

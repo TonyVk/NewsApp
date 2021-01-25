@@ -40,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity implements Callback<Sour
         if(response.body() != null && response.body().getStatus().equals("ok")){
             SourcesResponse sourcesResponse = response.body();
             portali = sourcesResponse.getSources();
-            LinearLayout.LayoutParams paramsButton = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams paramsButton = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             final LinearLayout ll = findViewById(R.id.lLayout);
             SwitchMaterial prvi = null;
             boolean BaremJedan = false;
