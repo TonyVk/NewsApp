@@ -16,6 +16,10 @@ public class ViewActivity extends AppCompatActivity {
         WebView editWeb = findViewById(R.id.web);
         Intent intent = getIntent();
         String url = intent.getStringExtra("url");
+        editWeb.getSettings().setLoadsImagesAutomatically(true);
+        editWeb.getSettings().setJavaScriptEnabled(true);
+        editWeb.getSettings().setAllowFileAccess(true);
+        editWeb.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         editWeb.loadUrl(url);
     }
 }

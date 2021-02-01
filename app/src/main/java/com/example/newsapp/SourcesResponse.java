@@ -6,11 +6,13 @@ import java.util.List;
 
 public class SourcesResponse {
     @SerializedName("sources")
-    private List<Sources> portali = null;
+    private final List<Sources> portali = null;
     @SerializedName("status")
-    private String status;
+    private final String status = null;
 
-    public String getStatus() { return status; }
+    public String getStatus() {
+        return status;
+    }
 
     public List<Sources> getSources() {
         return portali;

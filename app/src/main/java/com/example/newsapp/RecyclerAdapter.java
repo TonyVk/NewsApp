@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerAdapter extends
@@ -29,7 +28,7 @@ public class RecyclerAdapter extends
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup
                                                               viewGroup, int viewType) {
-            View view = (View) LayoutInflater.from(viewGroup.getContext())
+            View view = LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.recycler_body, viewGroup, false);
             return new VijestiViewHolder(view);
     }
@@ -38,17 +37,14 @@ public class RecyclerAdapter extends
             position) {
             VijestiViewHolder vijestiViewHolder = (VijestiViewHolder) viewHolder;
             if(dataList.get(position) != null) {
-                vijestiViewHolder.tvTitle.setText(((News) dataList.get(position)).getTitle());
-                vijestiViewHolder.tvContent.setText(((News) dataList.get(position)).getDescription());
+                vijestiViewHolder.tvTitle.setText(dataList.get(position).getTitle());
+                vijestiViewHolder.tvContent.setText(dataList.get(position).getDescription());
                 Picasso.get().load(String.valueOf(dataList.get(position).getUrlToImage())).resize(100, 100).centerCrop().error(R.drawable.notfound).into(vijestiViewHolder.image);
                 final String url = dataList.get(position).getUrl();
-                vijestiViewHolder.card.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent  = new Intent(context , ViewActivity.class);
-                        intent.putExtra("url", url);
-                        context.startActivity(intent); }
-                });
+                vijestiViewHolder.card.setOnClickListener(v -> {
+                    Intent intent  = new Intent(context , ViewActivity.class);
+                    intent.putExtra("url", url);
+                    context.startActivity(intent); });
             }
     }
     @Override

@@ -12,8 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -25,8 +23,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class fnews extends Fragment implements Callback<NewsResponse> {
-
-    private TextView naslov;
     private RecyclerView mRecyclerView;
     String pos;
     String apiKey = "4fc5eb2ae4ca425a8804fd5306df7643";
@@ -47,7 +43,6 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_fnews, container, false);
     }
 
@@ -62,16 +57,14 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
         ApiManager.getInstance().service().getNews(pos, page, apiKey).enqueue(this);
         initScrollListener();
         final FloatingActionButton button = view.findViewById(R.id.bSettings);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent myIntent = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(myIntent);
-            }
+        button.setOnClickListener(v -> {
+            Intent myIntent = new Intent(getActivity(), SettingsActivity.class);
+            startActivity(myIntent);
         });
     }
 
     @Override
-    public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
+    public void onResponse(@NonNull Call<NewsResponse> call, Response<NewsResponse> response) {
         if(response.body() != null && response.body().getStatus().equals("ok")){
             NewsResponse newsResponse = response.body();
             vijesti = newsResponse.getNews();
@@ -83,7 +76,7 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
     }
 
     @Override
-    public void onFailure(Call<NewsResponse> call, Throwable t) {
+    public void onFailure(@NonNull Call<NewsResponse> call, Throwable t) {
         t.printStackTrace();
     }
 
@@ -108,7 +101,7 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
                         if(page != 6) {
                             ApiManager.getInstance().service().getNews(pos, page, apiKey).enqueue(new Callback<NewsResponse>() {
                                 @Override
-                                public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
+                                public void onResponse(@NonNull Call<NewsResponse> call, @NonNull Response<NewsResponse> response) {
                                     if (response.body() != null && response.body().getStatus().equals("ok")) {
                                         NewsResponse newsResponse = response.body();
                                         List<News> ar = newsResponse.getNews();
@@ -119,7 +112,7 @@ public class fnews extends Fragment implements Callback<NewsResponse> {
                                 }
 
                                 @Override
-                                public void onFailure(Call<NewsResponse> call, Throwable t) {
+                                public void onFailure(@NonNull Call<NewsResponse> call, @NonNull Throwable t) {
 
                                 }
                             });

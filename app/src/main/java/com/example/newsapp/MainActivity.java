@@ -1,22 +1,17 @@
 package com.example.newsapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.LinearLayout;
 
-import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -53,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements Callback<SourcesR
     }
 
     @Override
-    public void onResponse(Call<SourcesResponse> call, Response<SourcesResponse> response) {
+    public void onResponse(@NonNull Call<SourcesResponse> call, Response<SourcesResponse> response) {
         if(response.body() != null && response.body().getStatus().equals("ok")){
             SourcesResponse sourcesResponse = response.body();
             List<Sources> portali = sourcesResponse.getSources();
@@ -77,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements Callback<SourcesR
     }
 
     @Override
-    public void onFailure(Call<SourcesResponse> call, Throwable t) {
+    public void onFailure(@NonNull Call<SourcesResponse> call, @NonNull Throwable t) {
 
     }
 }

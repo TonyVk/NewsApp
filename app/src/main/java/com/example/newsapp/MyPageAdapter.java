@@ -1,7 +1,5 @@
 package com.example.newsapp;
 
-import android.content.SharedPreferences;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,7 +15,7 @@ public class MyPageAdapter extends FragmentStatePagerAdapter {
     private final List<String> mFragmentTitleList = new ArrayList<>();
 
     public MyPageAdapter(@NonNull FragmentManager fm) {
-        super(fm);
+        super(fm, FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
     }
 
     @NonNull
@@ -26,7 +24,7 @@ public class MyPageAdapter extends FragmentStatePagerAdapter {
         return mFragmentList.get(i);
     }
 
-    // Returns total number of pages
+    //Vraca broj stranica
     @Override
     public int getCount() {
         return mFragmentList.size();
@@ -35,11 +33,6 @@ public class MyPageAdapter extends FragmentStatePagerAdapter {
     public void addFragment(Fragment fragment, String title) {
         mFragmentList.add(fragment);
         mFragmentTitleList.add(title);
-    }
-
-    public void removeFragment(Fragment fragment, int position) {
-        mFragmentList.remove(position);
-        mFragmentTitleList.remove(position);
     }
 
     @Nullable

@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiManager {
     static ApiManager instance;
-    private NewsApiService service;
+    private final NewsApiService service;
     private ApiManager(){
         Retrofit.Builder builder = new Retrofit.Builder();
         //postavljanje retrofit-a

@@ -1,17 +1,14 @@
 package com.example.newsapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
@@ -36,7 +33,7 @@ public class SettingsActivity extends AppCompatActivity implements Callback<Sour
     }
 
     @Override
-    public void onResponse(Call<SourcesResponse> call, Response<SourcesResponse> response) {
+    public void onResponse(@NonNull Call<SourcesResponse> call, Response<SourcesResponse> response) {
         if(response.body() != null && response.body().getStatus().equals("ok")){
             SourcesResponse sourcesResponse = response.body();
             portali = sourcesResponse.getSources();
@@ -80,18 +77,18 @@ public class SettingsActivity extends AppCompatActivity implements Callback<Sour
     }
 
     @Override
-    public void onFailure(Call<SourcesResponse> call, Throwable t) {
+    public void onFailure(@NonNull Call<SourcesResponse> call, @NonNull Throwable t) {
 
     }
 
-    // create an action bar button
+    //Dodavanje buttona u menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-    // handle button activities
+    //Dohvacanje pritiska na button
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
